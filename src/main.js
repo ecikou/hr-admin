@@ -4,7 +4,7 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+// import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
 import '@/styles/index.scss' // global css
 
@@ -29,15 +29,34 @@ import '@/permission' // permission control
 // }
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+// Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
-// Vue.use(ElementUI)
+import components from '@/components'
+import i18n from './lang'
+Vue.use(components)
+Vue.use(ElementUI, {
+  i18n: (key, value) => i18n.t(key, value)
+})
+import * as filters from '@/filters'
+Object.keys(filters).forEach(item => {
+  Vue.filter(item, filters[item])
+})
+import Print from 'vue-print-nb'
+// Global instruction
+Vue.use(Print)
+
+import mixins from './mixins'
+Vue.mixin(mixins)
 
 Vue.config.productionTip = false
-
+import * as obj from '@/directives'
+Object.keys(obj).forEach(item => {
+  Vue.directive(item, obj[item])
+})
 new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App)
 })
